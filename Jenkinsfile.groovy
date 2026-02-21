@@ -20,16 +20,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Build Frontend') {
-            steps {
-                dir('email-notification') {
-                    echo 'Building React Application...'
-                    sh 'npm install'
-                    sh 'npm run build'
-                }
-            }
-        }
         stage('Build Frontend') {
             steps {
                 dir('email-notification') {
