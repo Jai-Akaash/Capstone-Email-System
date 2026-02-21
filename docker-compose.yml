@@ -1,0 +1,63 @@
+services:
+  # 1. The Database
+  mysql:
+    image: mysql:8.0
+    container_name: capstone-mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: notification_db
+      MYSQL_ROOT_PASSWORD: SHARK@2026
+    ports:
+      - "3307:3306"
+    networks:
+      - capstone-net # 👈 Attaching to custom network
+
+  # 2. The Message Queue
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: capstone-rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - capstone-net # 👈 Attaching to custom network
+
+  # 3. The Spring Boot Backend
+  backend:
+    build: 
+      context: ./capstone
+      dockerfile: Dockerfile
+    container_name: capstone-backend
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://capstone-mysql:3306/notification_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=SHARK@2026
+      - RABBITMQ_HOST=capstone-rabbitmq
+    depends_on:
+      - mysql
+      - rabbitmq
+    networks:
+      - capstone-net # 👈 Attaching to custom network
+
+  # 4. The React Frontend
+  frontend:
+    build:
+      context: ./email-notification
+      dockerfile: Dockerfile
+    container_name: capstone-frontend
+    restart: always
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - capstone-net # 👈 Attaching to custom network
+
+# 5. Define the custom network
+networks:
+  capstone-net:
+    driver: bridge
