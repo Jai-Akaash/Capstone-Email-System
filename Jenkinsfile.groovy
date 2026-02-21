@@ -6,7 +6,9 @@ pipeline {
         maven 'maven'
         nodejs 'node'
     }
+
     environment {
+        // Injects the SendGrid key securely from the Jenkins Vault
         SENDGRID_API_KEY = credentials('SENDGRID_API_KEY')
     }
 
@@ -17,11 +19,33 @@ pipeline {
             }
         }
 
-        stage('Build Backend') {
+        stage('Build Backend & Run Tests') {
             steps {
                 dir('capstone') {
-                    echo 'Compiling Spring Boot Application...'
-                    sh 'mvn clean package -DskipTests'
+                    echo 'Compiling and Testing Java Application...'
+                    // We changed this from 'package -DskipTests' to 'verify'
+                    // This forces Maven to run your tests so JaCoCo can measure coverage!
+                    sh 'mvn clean verify'
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                dir('capstone') {
+                    // 'sonarqube' MUST match the name you typed in Manage Jenkins -> System
+                    withSonarQubeEnv('sonarqube') {
+                        sh 'mvn sonar:sonar -Dsonar.projectKey=capstone-backend -Dsonar.projectName="Capstone Backend"'
+                    }
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                // This forces Jenkins to pause and wait for SonarQube's Pass/Fail webhook
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
@@ -40,8 +64,7 @@ pipeline {
         stage('Containerize & Deploy') {
             steps {
                 echo 'Updating Docker Stack...'
-                // Using 'docker compose' (newer) vs 'docker-compose' (older)
-                // If this fails, try changing it back to 'docker-compose'
+                // Using 'docker-compose' as configured on your host
                 sh 'docker-compose up --build -d'
             }
         }
