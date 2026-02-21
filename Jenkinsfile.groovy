@@ -33,9 +33,14 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 dir('capstone') {
-                    // 'sonarqube' MUST match the name you typed in Manage Jenkins -> System
                     withSonarQubeEnv('sonarqube') {
-                        sh 'mvn sonar:sonar -Dsonar.projectKey=capstone-backend -Dsonar.projectName="Capstone Backend"'
+                        // We added the exclusions flag to ignore configs, DTOs, and the main app file
+                        sh '''
+                        mvn sonar:sonar \
+                          -Dsonar.projectKey=capstone-backend \
+                          -Dsonar.projectName="Capstone Backend" \
+                          -Dsonar.coverage.exclusions="**/config/**,**/dto/**,**/*Application.*"
+                        '''
                     }
                 }
             }
