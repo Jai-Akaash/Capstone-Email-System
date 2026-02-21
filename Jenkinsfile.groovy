@@ -39,7 +39,7 @@ pipeline {
                 echo 'Updating Docker Stack...'
                 // Using 'docker compose' (newer) vs 'docker-compose' (older)
                 // If this fails, try changing it back to 'docker-compose'
-                sh 'docker compose up --build -d'
+                sh 'docker-compose up --build -d'
             }
         }
     }
