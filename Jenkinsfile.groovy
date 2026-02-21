@@ -1,6 +1,9 @@
 pipeline {
-    agent any 
-
+    agent any
+    tools {
+        maven 'maven'   // This MUST match the name you gave it in "Tools"
+        nodejs 'node'    // This MUST match the name you gave it in "Tools"
+    }
     stages {
         stage('Source Control') {
             steps {
