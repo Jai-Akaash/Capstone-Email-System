@@ -6,6 +6,9 @@ pipeline {
         maven 'maven'
         nodejs 'node'
     }
+    environment {
+        SENDGRID_API_KEY = credentials('SENDGRID_API_KEY')
+    }
 
     stages {
         stage('Source Control') {

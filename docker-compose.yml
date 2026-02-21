@@ -37,6 +37,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=SHARK@2026
       - RABBITMQ_HOST=capstone-rabbitmq
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
     depends_on:
       - mysql
       - rabbitmq
