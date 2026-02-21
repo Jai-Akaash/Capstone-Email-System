@@ -30,6 +30,15 @@ pipeline {
                 }
             }
         }
+        steps {
+            dir('email-notification') {
+                echo 'Installing dependencies and fixing environment...'
+                // This installs the missing library needed for Node on Mac/Docker
+                sh 'apt-get update && apt-get install -y libatomic1'
+                sh 'npm install'
+                sh 'npm run build'
+            }
+        }
 
         stage('Containerize & Deploy') {
             steps {
