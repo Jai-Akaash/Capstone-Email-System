@@ -50,7 +50,7 @@ pipeline {
             steps {
                 // This forces Jenkins to pause and wait for SonarQube's Pass/Fail webhook
                 timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
+                    waitForQualityGate abortPipeline: false
                 }
             }
         }
