@@ -15,7 +15,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/email")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*") // This is crucial so your React frontend can talk to it later without CORS errors!
+@CrossOrigin(origins = "*")
+
+//@CrossOrigin(origins = "http://localhost:5173")
 public class EmailController {
 
     private final EmailProducerService emailProducerService;

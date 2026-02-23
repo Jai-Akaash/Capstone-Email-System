@@ -11,7 +11,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/templates")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*") // Allows your React app to call these APIs
+@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "http://localhost:5173")
 public class TemplateController {
 
     private final EmailTemplateRepository templateRepository;

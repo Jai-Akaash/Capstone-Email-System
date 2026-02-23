@@ -14,6 +14,8 @@ import java.util.Map;
 @RequestMapping("/api/dashboard")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
+
+//@CrossOrigin(origins = "http://localhost:5173")
 public class DashboardController {
 
     private final DashboardService dashboardService;
