@@ -11,8 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/templates")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
-//@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5173")
 public class TemplateController {
 
     private final EmailTemplateRepository templateRepository;
